@@ -56,6 +56,7 @@ func (a *app) mountRoutes(r *chi.Mux, chain *errchain.ErrChain, repos *repo.AllR
 		v1.WithMaxUploadSize(a.conf.Web.MaxUploadSize),
 		v1.WithRegistration(a.conf.Options.AllowRegistration),
 		v1.WithDemoStatus(a.conf.Demo), // Disable Password Change in Demo Mode
+		v1.WithOpenAIAPIKey(a.conf.OpenAI.APIKey),
 	)
 
 	r.Get(v1Base("/status"), chain.ToHandlerFunc(v1Ctrl.HandleBase(func() bool { return true }, v1.Build{
@@ -120,6 +121,7 @@ func (a *app) mountRoutes(r *chi.Mux, chain *errchain.ErrChain, repos *repo.AllR
 	r.Get(v1Base("/items/export"), chain.ToHandlerFunc(v1Ctrl.HandleItemsExport(), userMW...))
 	r.Get(v1Base("/items/fields"), chain.ToHandlerFunc(v1Ctrl.HandleGetAllCustomFieldNames(), userMW...))
 	r.Get(v1Base("/items/fields/values"), chain.ToHandlerFunc(v1Ctrl.HandleGetAllCustomFieldValues(), userMW...))
+	r.Post(v1Base("/items/ai-analyze"), chain.ToHandlerFunc(v1Ctrl.HandleItemAIAnalyze(), userMW...))
 
 	r.Get(v1Base("/items/{id}"), chain.ToHandlerFunc(v1Ctrl.HandleItemGet(), userMW...))
 	r.Get(v1Base("/items/{id}/path"), chain.ToHandlerFunc(v1Ctrl.HandleItemFullPath(), userMW...))

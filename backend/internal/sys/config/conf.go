@@ -26,6 +26,16 @@ type Config struct {
 	Demo    bool       `yaml:"demo"`
 	Debug   DebugConf  `yaml:"debug"`
 	Options Options    `yaml:"options"`
+	OpenAI  OpenAIConf `yaml:"openai"`
+}
+
+type OpenAIConf struct {
+	APIKey string `yaml:"api_key" conf:""`
+}
+
+// Ready returns true if the OpenAI configuration has an API key set.
+func (c *OpenAIConf) Ready() bool {
+	return c.APIKey != ""
 }
 
 type Options struct {

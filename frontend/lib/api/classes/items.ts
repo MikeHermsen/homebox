@@ -1,6 +1,7 @@
 import { BaseAPI, route } from "../base";
 import { parseDate } from "../base/base-api";
 import type {
+  AIAnalysisResult,
   ItemAttachmentUpdate,
   ItemCreate,
   ItemOut,
@@ -173,5 +174,15 @@ export class ItemsApi extends BaseAPI {
 
   exportURL() {
     return route("/items/export");
+  }
+
+  aiAnalyze(file: File | Blob) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.http.post<FormData, AIAnalysisResult>({
+      url: route("/items/ai-analyze"),
+      data: formData,
+    });
   }
 }

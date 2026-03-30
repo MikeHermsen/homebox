@@ -57,6 +57,12 @@ func WithSecureCookies(secure bool) func(*V1Controller) {
 	}
 }
 
+func WithOpenAIAPIKey(apiKey string) func(*V1Controller) {
+	return func(ctrl *V1Controller) {
+		ctrl.openAIAPIKey = apiKey
+	}
+}
+
 type V1Controller struct {
 	cookieSecure      bool
 	repo              *repo.AllRepos
@@ -65,6 +71,7 @@ type V1Controller struct {
 	isDemo            bool
 	allowRegistration bool
 	bus               *eventbus.EventBus
+	openAIAPIKey      string
 }
 
 type (

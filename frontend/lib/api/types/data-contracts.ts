@@ -436,6 +436,16 @@ export interface TokenResponse {
   token: string;
 }
 
+export interface AIAnalysisResult {
+  name: string;
+  description: string;
+  serialNumber: string;
+  modelNumber: string;
+  manufacturer: string;
+  notes: string;
+  labels: string[];
+}
+
 export interface Wrapped {
   item: any;
 }
