@@ -64,7 +64,7 @@
     // Show image preview
     const reader = new FileReader();
     reader.onload = (e) => {
-      aiState.imagePreview = e.target?.result;
+      aiState.imagePreview = /** @type {string} */ (e.target?.result) || "";
     };
     reader.readAsDataURL(file);
 
@@ -126,7 +126,7 @@
     <BaseSectionHeader> Add an Item To Your Inventory </BaseSectionHeader>
     <form class="max-w-3xl mx-auto my-5 space-y-6" @submit.prevent="submit">
       <!-- AI Photo Analysis Section -->
-      <div class="divider collapse-title px-0 cursor-pointer">📸 AI-Powered Quick Add</div>
+      <div class="divider px-0">📸 AI-Powered Quick Add</div>
       <div class="card bg-base-200">
         <div class="card-body">
           <p class="text-sm opacity-70 mb-3">
