@@ -171,6 +171,7 @@ func run(cfg *config.Config) error {
 
 	router := chi.NewMux()
 	router.Use(
+		mid.ClearSiteDataOnce,
 		middleware.RequestID,
 		middleware.RealIP,
 		mid.Logger(logger),

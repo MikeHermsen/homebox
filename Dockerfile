@@ -2,7 +2,7 @@
 # Build Nuxt
 FROM node:18-alpine as frontend-builder
 WORKDIR  /app
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile --shamefully-hoist
 COPY frontend .

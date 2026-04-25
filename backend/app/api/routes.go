@@ -44,6 +44,24 @@ func (a *app) mountRoutes(r *chi.Mux, chain *errchain.ErrChain, repos *repo.AllR
 		httpSwagger.URL("/swagger/doc.json"),
 	))
 
+	r.Get("/sw.js", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/javascript")
+		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+		w.Header().Set("Clear-Site-Data", `"cache", "storage", "executionContexts"`)
+		_, _ = w.Write([]byte(`
+self.addEventListener("install", event => self.skipWaiting());
+self.addEventListener("activate", event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(key => caches.delete(key)));
+    await self.registration.unregister();
+    const clientsList = await self.clients.matchAll({ type: "window" });
+    clientsList.forEach(client => client.navigate(client.url));
+  })());
+});
+`))
+	})
+
 	// =========================================================================
 	// API Version 1
 

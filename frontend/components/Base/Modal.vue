@@ -1,14 +1,16 @@
 <template>
   <div class="z-[999]">
     <input :id="modalId" v-model="modal" type="checkbox" class="modal-toggle" />
-    <div class="modal modal-bottom sm:modal-middle overflow-visible">
-      <div class="modal-box overflow-visible relative">
+    <div class="modal modal-bottom sm:modal-middle !items-end sm:!items-center overflow-y-auto p-2 sm:p-6">
+      <div class="modal-box relative flex max-h-[calc(100dvh-1rem)] w-full max-w-2xl flex-col overflow-hidden sm:max-h-[calc(100dvh-3rem)]">
         <button :for="modalId" class="btn btn-sm btn-circle absolute right-2 top-2" @click="close">✕</button>
 
-        <h3 class="font-bold text-lg">
+        <h3 class="shrink-0 pr-10 font-bold text-lg">
           <slot name="title"></slot>
         </h3>
-        <slot> </slot>
+        <div class="mt-4 min-h-0 flex-1 overflow-y-auto">
+          <slot> </slot>
+        </div>
       </div>
     </div>
   </div>

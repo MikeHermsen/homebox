@@ -22,8 +22,12 @@ export default defineNuxtConfig({
   },
   css: ["@/assets/css/main.css"],
   pwa: {
+    registerType: "autoUpdate",
     workbox: {
+      cleanupOutdatedCaches: true,
+      clientsClaim: true,
       navigateFallbackDenylist: [/^\/api/],
+      skipWaiting: true,
     },
     injectRegister: "script",
     injectManifest: {
