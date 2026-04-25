@@ -89,7 +89,33 @@ async function fileToDataUrl(file: File) {
   });
 }
 
+function enforceRequiredForAllProperties(schema: Record<string, any>): Record<string, any> {
+  const clone = structuredClone(schema);
+
+  function visit(node: Record<string, any>) {
+    if (!node || typeof node !== "object") return;
+
+    if (node.type === "object" && node.properties && typeof node.properties === "object") {
+      node.required = Object.keys(node.properties);
+      Object.values(node.properties).forEach(value => visit(value as Record<string, any>));
+    }
+
+    if (Array.isArray(node.anyOf)) {
+      node.anyOf.forEach(value => visit(value as Record<string, any>));
+    }
+
+    if (node.items && typeof node.items === "object") {
+      visit(node.items as Record<string, any>);
+    }
+  }
+
+  visit(clone);
+  return clone;
+}
+
 export function useOpenAIItemAgent() {
+  const strictOutputSchema = enforceRequiredForAllProperties(outputSchema);
+
   async function requestResponse(apiKey: string, body: Record<string, unknown>) {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -170,7 +196,7 @@ export function useOpenAIItemAgent() {
         format: {
           type: "json_schema",
           name: "inventory_prefill",
-          schema: outputSchema,
+          schema: strictOutputSchema,
           strict: true,
         },
       },
@@ -226,7 +252,7 @@ export function useOpenAIItemAgent() {
           format: {
             type: "json_schema",
             name: "inventory_prefill",
-            schema: outputSchema,
+            schema: strictOutputSchema,
             strict: true,
           },
         },
