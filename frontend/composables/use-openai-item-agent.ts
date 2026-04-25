@@ -63,7 +63,7 @@ const outputSchema = {
     prefill: {
       type: "object",
       additionalProperties: false,
-      required: ["name", "description"],
+      required: ["name", "description", "manufacturer", "modelNumber", "serialNumber", "notes"],
       properties: {
         name: { type: "string" },
         description: { type: "string" },
