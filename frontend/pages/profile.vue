@@ -8,6 +8,7 @@
   import MdiFill from "~icons/mdi/fill";
   import MdiPencil from "~icons/mdi/pencil";
   import MdiAccountMultiple from "~icons/mdi/account-multiple";
+  import MdiRobot from "~icons/mdi/robot-outline";
 
   definePageMeta({
     middleware: ["auth"],
@@ -19,6 +20,8 @@
   const api = useUserApi();
   const confirm = useConfirm();
   const notify = useNotifier();
+  const aiSettings = useAISettings();
+  const openAIApiKey = ref(aiSettings.apiKey.value);
 
   const currencies = computedAsync(async () => {
     const resp = await api.group.currencies();
@@ -187,6 +190,17 @@
     passwordChange.new = "";
     passwordChange.current = "";
     passwordChange.loading = false;
+  }
+
+  function saveAIApiKey() {
+    aiSettings.setApiKey(openAIApiKey.value);
+    notify.success("AI API key saved in browser storage.");
+  }
+
+  function clearAIApiKey() {
+    aiSettings.clearApiKey();
+    openAIApiKey.value = "";
+    notify.success("AI API key removed.");
   }
 
   // ===========================================================
@@ -432,6 +446,26 @@
 
           <div class="mt-4">
             <BaseButton size="sm" @click="updateGroup"> Update Group </BaseButton>
+          </div>
+        </div>
+      </BaseCard>
+
+      <BaseCard>
+        <template #title>
+          <BaseSectionHeader>
+            <MdiRobot class="mr-2 -mt-1 text-base-600" />
+            <span class="text-base-600"> AI Settings </span>
+            <template #description>
+              Set your OpenAI API key for AI prefill in the add-item flow. This key is stored only in this browser.
+            </template>
+          </BaseSectionHeader>
+        </template>
+
+        <div class="p-5 pt-0">
+          <FormPassword v-model="openAIApiKey" label="OpenAI API Key" placeholder="sk-..." />
+          <div class="mt-4 flex gap-2">
+            <BaseButton size="sm" @click="saveAIApiKey"> Save Key </BaseButton>
+            <BaseButton size="sm" class="btn-ghost" @click="clearAIApiKey"> Remove Key </BaseButton>
           </div>
         </div>
       </BaseCard>
